@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import MyMap from './my-map/myMap';
+import FsMap from './my-map/FsMap';
+import FsLayers from './my-map/FsLayers';
 import './style.css';
 
-interface AppProps {}
-interface AppState {
-  name: string;
-}
-
-const mapIsReadyCallback = (map) => {
-  console.log(map);
-};
-const App = () => {
-  
-  return <MyMap mapIsReadyCallback={mapIsReadyCallback} />;
+const App = () => 
+{
+	return (
+	<FsMap>
+		<FsLayers/>
+		<FsLayers/>
+	</FsMap>
+	)
 };
 
 render(<App />, document.getElementById('root'));
