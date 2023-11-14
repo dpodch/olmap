@@ -1,35 +1,41 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './FsMap.css';
 import { Map, View } from 'ol';
 import { transform } from 'ol/proj';
-import OSM from 'ol/source/OSM.js';
-import TileLayer from 'ol/layer/Tile';
 
 const FsMap = (props) => {
 	const mapContainer = useRef(null);
+	// const [renderState, setRenderState] = useState(undefined);
+	const [fsmap, setMapState] = useState(undefined);
 
-	let point = [31, 49];
+	let point = [25, 49];
 	let zoom = 7;
 
 	useEffect(() => {
-		var map = new Map({ target: 'map' });
-		map.getView().setCenter(transform(point, 'EPSG:4326', 'EPSG:3857'));
-		map.getView().setZoom(zoom);
-		map.addLayer(
-			new TileLayer({
-				source: new OSM({
-					url: 'https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
-				}),
-			})
-		);
+		var _fsmap = new Map({ target: 'map' });
+		_fsmap.getView().setCenter(transform(point, 'EPSG:4326', 'EPSG:3857'));
+		_fsmap.getView().setZoom(zoom);
+		console.log("FsMap : 1")
+		setMapState(_fsmap);
 	}, []);
 
-	// console.log(JSON.stringify(props.children));
-	console.log(props.children);
-	// mapContainer.current.appendChild(map);
+	let renderState:JSX.Element[] = []
+	if (fsmap)
+	{
+		console.log("FsMap : 2")
+		renderState = React.Children.map(props.children, (child, index) => {
+			return child.type({...child.props, map:fsmap, key:index});
+		});
+	}
 
-	// return <div className="map-container" ref={mapContainer}></div>;
-	return <div id="map" className="map"/>;
+	return (
+	<div>
+		<div>
+			{renderState}
+		</div>
+		<div id="map" className="map"/>
+	</div>
+	);
 };
 
 export default FsMap;
